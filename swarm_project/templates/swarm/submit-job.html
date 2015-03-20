@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title_block %}Submit Job{% endblock %}
+
+{% block body_block %}
+
+	<div class="page-header">
+		<h1>Submit A Job</h1>
+	</div>
+
+	<form id="job_form" method="post" action="/swarm/submit-job/">
+
+		{% csrf_token %}
+
+		<div class="container coords">
+			<!-- Coordinate Fields -->
+			<h3>Coordinates</h3>
+			{{ form.x_coord.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">x</span>
+				{% render_field form.x_coord class+="form-control" %}
+				<span class="input-group-addon">kpc</span>
+			</div>
+			{{ form.y_coord.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">y</span>
+				{% render_field form.y_coord class+="form-control" %}
+				<span class="input-group-addon">kpc</span>
+			</div>
+			{{ form.z_coord.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">z</span>
+				{% render_field form.z_coord class+="form-control" %}
+				<span class="input-group-addon">kpc</span>
+			</div>
+		</div>
+
+		<div class="container vels">
+			<!-- Velocity Fields -->
+			<h3>Velocities</h3>
+			{{ form.vx_vel.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">v<sub>x</sub></span>
+				{% render_field form.vx_vel class+="form-control" %}
+				<span class="input-group-addon">km/s</span>
+			</div>
+			{{ form.vy_vel.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">v<sub>y</sub></span>
+				{% render_field form.vy_vel class+="form-control" %}
+				<span class="input-group-addon">km/s</span>
+			</div>
+			{{ form.vz_vel.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">v<sub>z</sub></span>
+				{% render_field form.vz_vel class+="form-control" %}
+				<span class="input-group-addon">km/s</span>
+			</div>
+		</div>
+
+		<div class="container col-den">
+			<!-- Column Density Field -->
+			<h3>Column Density</h3>
+			{{ form.column_density.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">N<sub>c</sub></span>
+				{% render_field form.column_density class+="form-control" %}
+				<span class="input-group-addon">log cm<sup>-2</sup></span>
+			</div>
+		</div>
+
+		<div class="container sigmas">
+			<!-- Sigma Fields -->
+			<h3>Distribution Widths</h3>
+			{{ form.sigma_coord.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">&sigma;<sub>coord</sub></span>
+				{% render_field form.sigma_coord class+="form-control" %}
+				<span class="input-group-addon">kpc</span>
+			</div>
+			{{ form.sigma_vel.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">&sigma;<sub>vel</sub></span>
+				{% render_field form.sigma_vel class+="form-control" %}
+				<span class="input-group-addon">km/s</span>
+			</div>
+			{{ form.sigma_col_den.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">&sigma;<sub>N<sub>c</sub></sub></span>
+				{% render_field form.sigma_col_den class+="form-control" %}
+				<span class="input-group-addon">log cm<sup>-2</sup></span>
+			</div>
+		</div>
+
+		<div class="container drag">
+			<!-- Drag Toggle -->
+			{{ form.drag_option.errors }}
+			<h3>Drag {% render_field form.drag_option id+="drag-option" %}</h3>
+
+			<div class="drag-vel-fields">
+				<!-- Velocity Field Selection -->
+				{{ form.vel_field.errors }}
+				<h4>Velocity Field: {% render_field form.vel_field id+="vel-field" %}</h4>
+
+				<!-- Radial Outflow Fields -->
+				{{ form.RO_r_scale.errors }}
+				<div class="input-group form-group col-lg-3 RO">
+					<span class="input-group-addon">R<sub>scale</sub></span>
+					{% render_field form.RO_r_scale class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+				{{ form.RO_initial_vel.errors }}
+				<div class="input-group form-group col-lg-3 RO">
+					<span class="input-group-addon">v<sub>o</sub></span>
+					{% render_field form.RO_initial_vel class+="form-control" %}
+					<span class="input-group-addon">km/s</span>
+				</div>
+			</div>
+			<div class="drag-den-fields">
+				<!-- Drag Field Selection -->
+				{{ form.den_field.errors }}
+				<h4>Density Field: {% render_field form.den_field id+="den-field" %}</h4>
+
+				<!-- Constant Density Fields -->
+				{{ form.CD_density.errors }}
+				<div class="input-group form-group col-lg-3 CD">
+					<span class="input-group-addon">n<sub>H,0</sub></span>
+					{% render_field form.CD_density class+="form-control" %}
+					<span class="input-group-addon">log cm<sup>-3</sup></span>
+				</div>
+
+				<!-- Power Law Fields -->
+				{{ form.PL_density.errors }}
+				<div class="input-group form-group col-lg-3 PL">
+					<span class="input-group-addon">n<sub>H,0</sub></span>
+					{% render_field form.PL_density class+="form-control" %}
+					<span class="input-group-addon">log cm<sup>-3</sup></span>
+				</div>
+				{{ form.PL_r_scale.errors }}
+				<div class="input-group form-group col-lg-3 PL">
+					<span class="input-group-addon">R<sub>scale</sub></span>
+					{% render_field form.PL_r_scale class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+				{{ form.PL_alpha_exp.errors }}
+				<div class="input-group form-group col-lg-3 PL">
+					<span class="input-group-addon">&alpha;</span>
+					{% render_field form.PL_alpha_exp class+="form-control" %}
+				</div>
+
+				<!--Density Disk Fields -->
+				<!-- Density Disk 1 -->
+				<h5 class="DD">Density Disk 1</h5>
+				{{ form.DD_density1.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">n<sub>H,0</sub></span>
+					{% render_field form.DD_density1 class+="form-control" %}
+					<span class="input-group-addon">log cm<sup>-3</sup></span>
+				</div>
+				{{ form.DD_r_scale1.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">R<sub>scale</sub></span>
+					{% render_field form.DD_r_scale1 class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+				{{ form.DD_z_scale1.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">Z<sub>scale</sub></span>
+					{% render_field form.DD_z_scale1 class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+
+				<!-- Density Disk 2 -->
+				<h5 class="DD">Density Disk 2</h5>
+				{{ form.DD_density2.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">n<sub>H,0</sub></span>
+					{% render_field form.DD_density2 class+="form-control" %}
+					<span class="input-group-addon">log cm<sup>-3</sup></span>
+				</div>
+				{{ form.DD_r_scale2.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">R<sub>scale</sub></span>
+					{% render_field form.DD_r_scale2 class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+				{{ form.DD_z_scale2.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">Z<sub>scale</sub></span>
+					{% render_field form.DD_z_scale2 class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+
+				<!-- Density Disk 3 -->
+				<h5 class="DD">Density Disk 3</h5>
+				{{ form.DD_density3.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">n<sub>H,0</sub></span>
+					{% render_field form.DD_density3 class+="form-control" %}
+					<span class="input-group-addon">log cm<sup>-3</sup></span>
+				</div>
+				{{ form.DD_r_scale3.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">R<sub>scale</sub></span>
+					{% render_field form.DD_r_scale3 class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+				{{ form.DD_z_scale3.errors }}
+				<div class="input-group form-group col-lg-3 DD">
+					<span class="input-group-addon">Z<sub>scale</sub></span>
+					{% render_field form.DD_z_scale3 class+="form-control" %}
+					<span class="input-group-addon">kpc</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="container potential">
+			<!-- Potential Choice Field -->
+			{{ form.potential.errors }}
+			<h3>Gravitational Potential: {% render_field form.potential id+="potential-field" %}</h3>
+
+			<!-- Point Source Mass Field -->
+			{{ form.PS_mass.errors }}
+			<div class="input-group form-group col-lg-3 PS">
+				<span class="input-group-addon">M</span>
+				{% render_field form.PS_mass class+="form-control" %}
+				<span class="input-group-addon">M<sub>sun</sub></span>
+			</div>
+
+			<!-- Wolfire Component Checkboxes -->
+			<div class="WF">
+				{{ form.WF_disk.errors }}
+				<h5>Disk: {% render_field form.WF_disk %}</h5>
+				{{ form.WF_bulge.errors }}
+				<h5>Bulge: {% render_field form.WF_bulge %}</h5>
+				{{ form.WF_halo.errors }}
+				<h5>Halo: {% render_field form.WF_halo %}</h5>
+			</div>
+		</div>
+
+		<div class="container sim-params">
+			<h3>Simulation Parameters</h3>
+
+			<!-- Total Time and Timestep fields -->
+			<h4>Time Information</h4>
+			{{ form.total_time.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">Runtime</span>
+				{% render_field form.total_time class+="form-control" %}
+				<span class="input-group-addon">Gyr</span>
+			</div>
+			{{ form.timesteps.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">Timesteps</span>
+				{% render_field form.timesteps class+="form-control" %}
+			</div>
+
+			<!-- Number of Particles field -->
+			<h4>Particles</h4>
+			{{ form.n_particles.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">N</span>
+				{% render_field form.n_particles class+="form-control" %}
+			</div>
+
+			<!-- Integrator Convergence Tolerance -->
+			<h4>Integrator Convergence Tolerance</h4>
+			{{ form.int_con_tol.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">ICT</span>
+				{% render_field form.int_con_tol class+="form-control" %}
+				<span class="input-group-addon">log pc</span>
+			</div>
+
+			<!-- Email Address Field -->
+			<h4>Email Address</h4>
+			{{ form.email_address.errors }}
+			<div class="input-group form-group col-lg-3">
+				<span class="input-group-addon">Email</span>
+				{% render_field form.email_address class+="form-control" %}
+			</div>
+		</div>
+
+		<button class="btn btn-primary" type="submit">Submit Job</button>
+	</form>
+{% endblock %}
